@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
+import { AnyNode } from "domhandler";
 
 interface ExplodeRequest {
   url: string;
@@ -127,7 +128,7 @@ export async function POST(request: NextRequest) {
     const allCss: string[] = [];
 
     // Extract images from <img> tags
-    $("img").each((_: number, elem: cheerio.Element) => {
+    $("img").each((_: number, elem: AnyNode) => {
       const src = $(elem).attr("src");
       if (src && !src.startsWith("data:")) {
         images.add(resolveUrl(url, src));
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Extract images from srcset attributes
-    $("img[srcset], source[srcset]").each((_: number, elem: cheerio.Element) => {
+    $("img[srcset], source[srcset]").each((_: number, elem: AnyNode) => {
       const srcset = $(elem).attr("srcset");
       if (srcset) {
         srcset.split(",").forEach((src: string) => {
@@ -148,7 +149,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Extract inline styles and collect CSS
-    $("[style]").each((_: number, elem: cheerio.Element) => {
+    $("[style]").each((_: number, elem: AnyNode) => {
       const style = $(elem).attr("style");
       if (style) {
         allCss.push(style);
@@ -156,7 +157,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Extract CSS from <style> tags
-    $("style").each((_: number, elem: cheerio.Element) => {
+    $("style").each((_: number, elem: AnyNode) => {
       const css = $(elem).html();
       if (css) {
         allCss.push(css);
@@ -165,7 +166,7 @@ export async function POST(request: NextRequest) {
 
     // Extract CSS from <link> tags (external stylesheets)
     const linkPromises: Promise<void>[] = [];
-    $("link[rel='stylesheet']").each((_: number, elem: cheerio.Element) => {
+    $("link[rel='stylesheet']").each((_: number, elem: AnyNode) => {
       const href = $(elem).attr("href");
       if (href) {
         const cssUrl = resolveUrl(url, href);
@@ -202,7 +203,7 @@ export async function POST(request: NextRequest) {
     extractFonts(combinedCss).forEach((font) => fonts.add(font));
 
     // Also check for Google Fonts in link tags
-    $("link[href*='fonts.googleapis.com']").each((_: number, elem: cheerio.Element) => {
+    $("link[href*='fonts.googleapis.com']").each((_: number, elem: AnyNode) => {
       const href = $(elem).attr("href");
       if (href) {
         const familyMatch = /family=([^&:]+)/i.exec(href);
