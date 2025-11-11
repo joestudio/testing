@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
-import { AnyNode } from "domhandler";
+import type { AnyNode } from "domhandler";
 
 interface ExplodeRequest {
   url: string;
