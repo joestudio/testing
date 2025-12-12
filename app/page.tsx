@@ -81,6 +81,11 @@ export default function Home() {
           <p className="text-gray-600 text-lg">
             Extract images, colors, and fonts from any webpage
           </p>
+          <div className="mt-4">
+            <a href="/watermark" className="text-purple-600 hover:text-purple-800 underline font-medium">
+                New: Try our PDF Watermark Tool
+            </a>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
